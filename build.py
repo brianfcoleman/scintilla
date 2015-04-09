@@ -273,6 +273,7 @@ def main():
                 command = commands[command_name]
                 command(options, config_options, log_files)
         except Exception as e:
+            print(e)
             log_error(log_files, e)
             sys.exit(1)
 
