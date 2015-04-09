@@ -96,7 +96,9 @@ def generator(name, architecture):
                 x86: '',
                 x64: 'Win64'
             }
-            return '{} {}'.format(name, platforms[architecture])
+            platform = platforms[architecture]
+            if len(platform) != 0:
+                return '{} {}'.format(name, platform)
     return name
 
 def read_config_file(config_file_path):
@@ -121,7 +123,7 @@ def parse_arguments():
         metavar='COMMAND')
     parser.add_argument('-c', '--configuration', nargs='+',
         choices=CONFIGURATIONS, dest='configurations', default=[DEBUG])
-    parser.add_argument('-a', '--architecture', type=int,
+    parser.add_argument('-a', '--architecture', nargs='+',
         choices=ARCHITECTURES, dest='architectures', default=[x64])
     return parser.parse_args()
 
@@ -154,11 +156,16 @@ def cmake(architecture, config_options, log_files):
 
 def msbuild(target, architecture, configuration, log_files):
     MSBUILD = 'msbuild'
+    platforms = {
+        x86: 'Win32',
+        x64: x64
+    }
+    platform = platforms[architecture]
     command = [
         MSBUILD,
             solution_file_path(architecture),
             '/target:{}'.format(target),
-            '/property:Platform={}'.format(architecture),
+            '/property:Platform={}'.format(platform),
             '/property:Configuration={}'.format(configuration),
             '/maxcpucount:{}'.format(multiprocessing.cpu_count()),
             '/verbosity:detailed',
@@ -186,6 +193,7 @@ def open_solution(architecture, log_files):
         cscript(OPEN_SOLUTION, [solution_path], log_files)
 
 def open_solutions(options, config_options, log_files):
+    print(OPEN)
     for architecture in options.architectures:
         open_solution(architecture, log_files)
 
@@ -197,6 +205,7 @@ def close_solution(architecture, log_files):
         cscript(CLOSE_SOLUTION, [solution_path], log_files)
 
 def close_solutions(options, config_options, log_files):
+    print(CLOSE)
     for architecture in ARCHITECTURES:
         close_solution(architecture, log_files)
 
@@ -209,6 +218,7 @@ def rmdir(path):
 
 def distclean(options, config_options, log_files):
     close_solutions(options, config_options, log_files)
+    print(DISTCLEAN)
     rmdir(output_dir_path())
 
 def mkdir(path):
@@ -217,6 +227,7 @@ def mkdir(path):
 
 def configure(options, config_options, log_files):
     close_solutions(options, config_options, log_files)
+    print(CONFIGURE)
     for architecture in options.architectures:
         mkdir(output_dir_path(architecture))
         cmake(architecture, config_options, log_files)
@@ -238,12 +249,15 @@ def target(name, options, config_options, log_files):
     os_target()
 
 def clean(options, config_options, log_files):
+    print(CLEAN)
     target(CLEAN, options, config_options, log_files)
 
 def build(options, config_options, log_files):
+    print(BUILD)
     target(BUILD, options, config_options, log_files)
 
 def rebuild(options, config_options, log_files):
+    print(REBUILD)
     target(REBUILD, options, config_options, log_files)
 
 def main():
