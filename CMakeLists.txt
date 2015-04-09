@@ -9,7 +9,7 @@ add_definitions(
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
-set(CMAKE_PREFIX_PATH "/Qt/Qt5.4.1/5.4/msvc2010_opengl")
+set(CMAKE_PREFIX_PATH ${QT_INSTALL_DIR})
 find_package(Qt5Widgets)
 
 add_subdirectory(include)

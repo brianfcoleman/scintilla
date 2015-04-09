@@ -1,1 +1,4 @@
 out
+.build.config.json
+build-output.log
+build-error.log
