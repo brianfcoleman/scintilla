@@ -9,7 +9,7 @@ add_definitions(
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
-set(CMAKE_PREFIX_PATH ${QT_INSTALL_DIR})
+set(CMAKE_PREFIX_PATH "${QT_INSTALL_DIR}")
 find_package(Qt5Widgets)
 
 add_subdirectory(include)
