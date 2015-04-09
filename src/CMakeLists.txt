@@ -1,0 +1,78 @@
+set(Sources
+    XPM.cxx
+    ViewStyle.cxx
+    UniConversion.cxx
+    Style.cxx
+    Selection.cxx
+    ScintillaBase.cxx
+    RunStyles.cxx
+    RESearch.cxx
+    PositionCache.cxx
+    PerLine.cxx
+    MarginView.cxx
+    LineMarker.cxx
+    KeyMap.cxx
+    Indicator.cxx
+    ExternalLexer.cxx
+    EditView.cxx
+    Editor.cxx
+    EditModel.cxx
+    Document.cxx
+    Decoration.cxx
+    ContractionState.cxx
+    CharClassify.cxx
+    CellBuffer.cxx
+    Catalogue.cxx
+    CaseFolder.cxx
+    CaseConvert.cxx
+    CallTip.cxx
+    AutoComplete.cxx
+)
+
+set(Headers
+    XPM.h
+    ViewStyle.h
+    UniConversion.h
+    Style.h
+    Selection.h
+    ScintillaBase.h
+    RunStyles.h
+    RESearch.h
+    PositionCache.h
+    PerLine.h
+    MarginView.h
+    LineMarker.h
+    KeyMap.h
+    Indicator.h
+    ExternalLexer.h
+    EditView.h
+    Editor.h
+    EditModel.h
+    Document.h
+    Decoration.h
+    ContractionState.h
+    CharClassify.h
+    CellBuffer.h
+    Catalogue.h
+    CaseFolder.h
+    CaseConvert.h
+    CallTip.h
+    AutoComplete.h
+)
+
+add_library(Scintilla
+    STATIC
+    ${Sources}
+    ${Headers}
+)
+
+target_include_directories(Scintilla
+    PRIVATE
+    ${ScintillaPublicHeadersDir}
+    ${LexLibHeadersDir}
+)
+
+set(ScintillaHeadersDir
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    PARENT_SCOPE
+)

@@ -1,0 +1,44 @@
+set(Sources
+    WordList.cxx
+    StyleContext.cxx
+    PropSetSimple.cxx
+    LexerSimple.cxx
+    LexerNoExceptions.cxx
+    LexerModule.cxx
+    LexerBase.cxx
+    CharacterSet.cxx
+    Accessor.cxx
+    CharacterCategory.cxx
+)
+
+set(Headers
+    WordList.h
+    StyleContext.h
+    SparseState.h
+    PropSetSimple.h
+    OptionSet.h
+    LexerSimple.h
+    LexerNoExceptions.h
+    LexerModule.h
+    LexerBase.h
+    LexAccessor.h
+    CharacterSet.h
+    CharacterCategory.h
+    Accessor.h
+)
+
+add_library(LexLib
+    STATIC
+    ${Sources}
+    ${Headers}
+)
+
+target_include_directories(LexLib
+    PRIVATE
+    ${ScintillaPublicHeadersDir}
+)
+
+set(LexLibHeadersDir
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    PARENT_SCOPE
+)
