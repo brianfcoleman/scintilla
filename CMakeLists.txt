@@ -10,9 +10,27 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
 set(CMAKE_PREFIX_PATH "${QT_INSTALL_DIR}")
-find_package(Qt5Widgets)
+find_package(Qt5Widgets REQUIRED)
 
-add_subdirectory(include)
+set(ScintillaPublicHeadersDir
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+set(ScintillaPublicHeaders
+    ${ScintillaPublicHeadersDir}/Scintilla.h
+    ${ScintillaPublicHeadersDir}/SciLexer.h
+    ${ScintillaPublicHeadersDir}/Platform.h
+    ${ScintillaPublicHeadersDir}/ILexer.h
+)
+
+set(LexLibHeadersDir
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexlib
+)
+
+set(ScintillaHeadersDir
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
 add_subdirectory(lexlib)
 add_subdirectory(lexers)
 add_subdirectory(src)

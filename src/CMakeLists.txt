@@ -33,21 +33,22 @@ set(Headers
     XPM.h
     ViewStyle.h
     UniConversion.h
+    UnicodeFromUTF8.h
     Style.h
+    SplitVector.h
     Selection.h
     ScintillaBase.h
     RunStyles.h
     RESearch.h
     PositionCache.h
     PerLine.h
-    MarginView.h
+    Partitioning.h
     LineMarker.h
     KeyMap.h
     Indicator.h
+    FontQuality.h
     ExternalLexer.h
-    EditView.h
     Editor.h
-    EditModel.h
     Document.h
     Decoration.h
     ContractionState.h
@@ -64,15 +65,11 @@ add_library(Scintilla
     STATIC
     ${Sources}
     ${Headers}
+    ${ScintillaPublicHeaders}
 )
 
 target_include_directories(Scintilla
     PRIVATE
     ${ScintillaPublicHeadersDir}
     ${LexLibHeadersDir}
-)
-
-set(ScintillaHeadersDir
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    PARENT_SCOPE
 )

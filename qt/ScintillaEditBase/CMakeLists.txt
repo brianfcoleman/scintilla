@@ -14,7 +14,6 @@ add_library(ScintillaEditBase
     SHARED
     ${Sources}
     ${Headers}
-    ${ScintillaPublicHeaders}
 )
 
 add_dependencies(ScintillaEditBase

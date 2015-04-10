@@ -37,8 +37,3 @@ target_include_directories(LexLib
     PRIVATE
     ${ScintillaPublicHeadersDir}
 )
-
-set(LexLibHeadersDir
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    PARENT_SCOPE
-)
