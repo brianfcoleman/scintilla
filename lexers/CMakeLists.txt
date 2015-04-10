@@ -104,7 +104,6 @@ add_library(Lexers
 )
 
 target_include_directories(Lexers
-    PRIVATE
-    ${ScintillaPublicHeadersDir}
-    ${LexLibHeadersDir}
+   PUBLIC
+   $<TARGET_PROPERTY:LexLib,INTERFACE_INCLUDE_DIRECTORIES>
 )

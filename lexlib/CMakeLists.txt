@@ -34,6 +34,7 @@ add_library(LexLib
 )
 
 target_include_directories(LexLib
-    PRIVATE
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
     ${ScintillaPublicHeadersDir}
 )

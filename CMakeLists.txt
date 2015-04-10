@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.8.11)
 project(Cursor)
 
 add_definitions(
+    -DSCINTILLA_QT=1
     -DSCI_LEXER=1
 )
 
@@ -23,15 +24,8 @@ set(ScintillaPublicHeaders
     ${ScintillaPublicHeadersDir}/ILexer.h
 )
 
-set(LexLibHeadersDir
-    ${CMAKE_CURRENT_SOURCE_DIR}/lexlib
-)
-
-set(ScintillaHeadersDir
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
-)
-
 add_subdirectory(lexlib)
 add_subdirectory(lexers)
 add_subdirectory(src)
 add_subdirectory(qt)
+add_subdirectory(cursor)

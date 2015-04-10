@@ -69,7 +69,7 @@ add_library(Scintilla
 )
 
 target_include_directories(Scintilla
-    PRIVATE
-    ${ScintillaPublicHeadersDir}
-    ${LexLibHeadersDir}
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    $<TARGET_PROPERTY:Lexers,INTERFACE_INCLUDE_DIRECTORIES>
 )

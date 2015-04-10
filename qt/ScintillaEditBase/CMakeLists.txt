@@ -11,32 +11,14 @@ set(Headers
 )
 
 add_library(ScintillaEditBase
-    SHARED
+    STATIC
     ${Sources}
     ${Headers}
 )
 
-add_dependencies(ScintillaEditBase
-    LexLib
-    Lexers
-    Scintilla
-)
-
 target_include_directories(ScintillaEditBase
-    PRIVATE
-    ${ScintillaPublicHeadersDir}
-    ${LexLibHeadersDir}
-    ${ScintillaHeadersDir}
-)
-
-target_link_libraries(ScintillaEditBase
-    Qt5::Widgets
-    LexLib
-    Lexers
-    Scintilla
-)
-
-add_definitions(
-    -DSCINTILLA_QT=1
-    -DMAKING_LIBRARY=1
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    $<TARGET_PROPERTY:Scintilla,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:Qt5::Widgets,INTERFACE_INCLUDE_DIRECTORIES>
 )

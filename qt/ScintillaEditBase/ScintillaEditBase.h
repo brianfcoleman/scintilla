@@ -27,19 +27,7 @@ class ScintillaQt;
 class SurfaceImpl;
 struct SCNotification;
 
-#ifdef WIN32
-#ifdef MAKING_LIBRARY
-#define EXPORT_IMPORT_API __declspec(dllexport)
-#else
-// Defining dllimport upsets moc
-#define EXPORT_IMPORT_API __declspec(dllimport)
-//#define EXPORT_IMPORT_API
-#endif
-#else
-#define EXPORT_IMPORT_API
-#endif
-
-class EXPORT_IMPORT_API ScintillaEditBase : public QAbstractScrollArea {
+class ScintillaEditBase : public QAbstractScrollArea {
 	Q_OBJECT
 
 public:

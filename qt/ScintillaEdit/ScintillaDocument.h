@@ -13,21 +13,7 @@ class WatcherHelper;
 namespace Scintilla {
 #endif
 
-#ifndef EXPORT_IMPORT_API
-#ifdef WIN32
-#ifdef MAKING_LIBRARY
-#define EXPORT_IMPORT_API __declspec(dllexport)
-#else
-// Defining dllimport upsets moc
-#define EXPORT_IMPORT_API __declspec(dllimport)
-//#define EXPORT_IMPORT_API
-#endif
-#else
-#define EXPORT_IMPORT_API
-#endif
-#endif
-
-class EXPORT_IMPORT_API ScintillaDocument : public QObject
+class ScintillaDocument : public QObject
 {
     Q_OBJECT
 
@@ -77,7 +63,7 @@ public:
     int get_eol_mode();
     void set_eol_mode(int eol_mode);
     int move_position_outside_char(int pos, int move_dir, bool check_line_end);
-    
+
     int get_character(int pos); // Calls GetCharacterAndWidth(pos, NULL)
 
 private:
