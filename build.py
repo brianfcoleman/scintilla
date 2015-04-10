@@ -95,7 +95,7 @@ def solution_file_path(architecture):
 
 def cursor_path(architecture, configuration):
     return os.path.join(output_dir_path(architecture), 'cursor', configuration,
-        'Cursor.exe')
+        'cursor.exe')
 
 def qt_bin_dir(config_options):
     qt_install_dir = config_options[QT_INSTALL_DIR]

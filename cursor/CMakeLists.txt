@@ -7,6 +7,10 @@ add_executable(Cursor
     ${Sources}
 )
 
+set_target_properties(Cursor
+    PROPERTIES
+    OUTPUT_NAME cursor)
+
 add_dependencies(Cursor
     LexLib
     Lexers
