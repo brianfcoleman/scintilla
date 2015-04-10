@@ -17,6 +17,7 @@ CONFIGURE = 'configure'
 CLEAN = 'clean'
 BUILD = 'build'
 REBUILD = 'rebuild'
+RUN = 'run'
 COMMANDS = [
     OPEN,
     CLOSE,
@@ -24,7 +25,8 @@ COMMANDS = [
     CONFIGURE,
     CLEAN,
     BUILD,
-    REBUILD
+    REBUILD,
+    RUN
 ]
 
 DEBUG = 'debug'
@@ -55,6 +57,8 @@ ERROR = 'error'
 
 WINDOWS = 'win32'
 VISUAL_STUDIO = 'Visual Studio'
+
+PATH = 'PATH'
 
 def log_message(log_file, message, newline=True):
     if newline:
@@ -88,6 +92,14 @@ def output_dir_path(architecture=None):
 
 def solution_file_path(architecture):
     return os.path.join(output_dir_path(architecture), 'Cursor.sln')
+
+def cursor_path(architecture, configuration):
+    return os.path.join(output_dir_path(architecture), 'cursor', configuration,
+        'Cursor.exe')
+
+def qt_bin_dir(config_options):
+    qt_install_dir = config_options[QT_INSTALL_DIR]
+    return os.path.join(qt_install_dir, 'bin')
 
 def generator(name, architecture):
     if sys.platform == WINDOWS:
@@ -130,12 +142,12 @@ def parse_arguments():
 def format_command(command):
     return ' '.join(command)
 
-def call(command, log_files, cwd=os.getcwd()):
+def call(command, log_files, cwd=None, env=None):
     message = '{} (cwd: {})'.format(format_command(command), cwd)
     print(message)
     log_header(log_files[OUTPUT], message)
     log_header(log_files[ERROR], message)
-    process = Popen(command, cwd=cwd, stdout=PIPE, stderr=PIPE)
+    process = Popen(command, cwd=cwd, env=env, stdout=PIPE, stderr=PIPE)
     output, error = process.communicate()
     log_output(log_files, output, newline=False)
     log_error(log_files, error, newline=False)
@@ -260,6 +272,25 @@ def rebuild(options, config_options, log_files):
     print(REBUILD)
     target(REBUILD, options, config_options, log_files)
 
+def add_to_path(path, component):
+    separator = ';'
+    components = path.split(separator)
+    if not component in components:
+        components.append(component)
+    return str(separator.join(components))
+
+def add_qt_to_path(env, config_options):
+    env[PATH] = add_to_path(env[PATH], qt_bin_dir(config_options))
+
+def run(options, config_options, log_files):
+    print(RUN)
+    env = dict(os.environ)
+    if sys.platform == WINDOWS:
+        add_qt_to_path(env, config_options)
+    for architecture in options.architectures:
+        for configuration in options.configurations:
+            call([cursor_path(architecture, configuration)], log_files, env=env)
+
 def main():
     options = parse_arguments()
     with \
@@ -281,7 +312,8 @@ def main():
                 CONFIGURE: configure,
                 CLEAN: clean,
                 BUILD: build,
-                REBUILD: rebuild
+                REBUILD: rebuild,
+                RUN: run
             }
             for command_name in options.command_names:
                 command = commands[command_name]
