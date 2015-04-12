@@ -1,10 +1,20 @@
 set(Sources
-    main.cpp
+    DocumentManager.cpp
+    Main.cpp
+    MessageSender.cpp
+)
+
+set(Headers
+    Document.h
+    DocumentManager.h
+    MessageSender.h
+    ScopeExit.h
 )
 
 add_executable(Cursor
     WIN32
     ${Sources}
+    ${Headers}
 )
 
 set_target_properties(Cursor

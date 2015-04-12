@@ -137,6 +137,7 @@ def parse_arguments():
         choices=CONFIGURATIONS, dest='configurations', default=[DEBUG])
     parser.add_argument('-a', '--architecture', nargs='+',
         choices=ARCHITECTURES, dest='architectures', default=[x64])
+    parser.add_argument('--arguments', nargs='*', dest='arguments', default=[])
     return parser.parse_args()
 
 def format_command(command):
@@ -289,7 +290,8 @@ def run(options, config_options, log_files):
         add_qt_to_path(env, config_options)
     for architecture in options.architectures:
         for configuration in options.configurations:
-            call([cursor_path(architecture, configuration)], log_files, env=env)
+            call([cursor_path(architecture, configuration)] + options.arguments,
+                log_files, env=env)
 
 def main():
     options = parse_arguments()
