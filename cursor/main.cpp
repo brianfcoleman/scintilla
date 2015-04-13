@@ -31,6 +31,9 @@ QString applicationDescription() {
 
 int main(int argc, char** argv) {
     using namespace cursor;
+
+    qDebug() << "Starting " << applicationName();
+
     QApplication application(argc, argv);
     QCoreApplication::setApplicationName(applicationName());
     QCoreApplication::setApplicationVersion(applicationVersion());
@@ -54,6 +57,7 @@ int main(int argc, char** argv) {
     std::for_each(std::begin(positionalArguments),
                   std::end(positionalArguments),
                   [&documentManager](const QString& filePath) {
+        qDebug() << "Loading document " << filePath;
         documentManager.loadDocument(filePath);
     });
 
