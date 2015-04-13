@@ -45,11 +45,11 @@ bool DocumentManager::loadDocument(const QString& filePath) {
         }
         qDebug() << "Opened document " << filePath;
         QTextStream textStream(&file);
-        const auto maxLineLengthCharacters = 120;
+        const auto maxCharactersToRead = 4096 / 4;
         while (!textStream.atEnd()) {
-            auto line = textStream.readLine(maxLineLengthCharacters);
-            auto lineUtf8 = line.toUtf8();
-            auto result = loader->AddData(lineUtf8.data(), lineUtf8.size());
+            auto text = textStream.read(maxCharactersToRead);
+            auto textUtf8 = text.toUtf8();
+            auto result = loader->AddData(textUtf8.data(), textUtf8.size());
             if (result != SC_STATUS_OK) {
                 qDebug() << "Failed to add data to document " << filePath;
                 return Document();
