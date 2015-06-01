@@ -55,10 +55,23 @@ BUILD_ERROR_LOG = 'build-error.log'
 OUTPUT = 'output'
 ERROR = 'error'
 
-WINDOWS = 'win32'
 VISUAL_STUDIO = 'Visual Studio'
+UNIX_MAKEFILES = 'Unix Makefiles'
 
 PATH = 'PATH'
+
+def python_major_version():
+    return sys.version_info.major
+
+WINDOWS = 'win32'
+OSX = 'darwin'
+if python_major_version() == 2:
+    LINUX = 'linux2'
+elif python_major_version() == 3:
+    LINUX = 'linux'
+else:
+    raise Exception('Python version {} not tested'.format(
+        python_major_version()))
 
 def log_message(log_file, message, newline=True):
     if newline:
@@ -128,11 +141,18 @@ def validate_config_options(config_options):
         if not config_options[GENERATOR].startswith(VISUAL_STUDIO):
             raise Exception(
                 'Generators other than Visual Studio not tested on Windows')
+    elif sys.platform == OSX:
+        if not config_options[GENERATOR] == UNIX_MAKEFILES:
+            raise Exception(
+                'Generators other than Make not tested on OSX')
+    elif sys.platform == LINUX:
+        if not config_options[GENERATOR] == UNIX_MAKEFILES:
+            raise Exception(
+                'Generators other than Make not tested on Linux')
 
 def parse_arguments():
     parser = ArgumentParser()
-    parser.add_argument('command_names', nargs='+', choices=COMMANDS,
-        metavar='COMMAND')
+    parser.add_argument('command_names', nargs='+', choices=COMMANDS)
     parser.add_argument('-c', '--configuration', nargs='+',
         choices=CONFIGURATIONS, dest='configurations', default=[DEBUG])
     parser.add_argument('-a', '--architecture', nargs='+',
@@ -164,6 +184,24 @@ def cmake(architecture, config_options, log_files):
             '-DQT_INSTALL_DIR={}'.format(config_options[QT_INSTALL_DIR]),
             '-G', generator(config_options[GENERATOR], architecture),
             repo_dir_path()
+    ]
+    call(command, log_files, cwd=output_dir_path(architecture))
+
+def makefile_targets(build_command):
+    ALL = 'all'
+    targets = {
+        CLEAN: [CLEAN],
+        BUILD: [ALL],
+        REBUILD: [CLEAN, ALL]
+    }
+    return targets[build_command]
+
+def make(target, architecture, configuration, log_files):
+    MAKE = 'make'
+    command = [
+        MAKE,
+            '-f', 'Makefile',
+            target
     ]
     call(command, log_files, cwd=output_dir_path(architecture))
 
@@ -250,13 +288,24 @@ def build_target(build_tool, target, architectures, configurations, log_files):
         for configuration in configurations:
             build_tool(target, architecture, configuration, log_files)
 
-def target(name, options, config_options, log_files):
+def build_targets(build_tool, targets, architectures, configurations, log_files):
+    for target in targets:
+        build_target(build_tool, target, architectures, configurations,
+            log_files)
+
+def target(build_command, options, config_options, log_files):
     architectures = options.architectures
     configurations = options.configurations
     os_targets = {
         WINDOWS: lambda: \
-            build_target(msbuild, name, architectures, configurations,
-                log_files)
+            build_target(msbuild, build_command, architectures, configurations,
+                log_files),
+        OSX: lambda: \
+            build_targets(make, makefile_targets(build_command), architectures,
+                configurations, log_files),
+        LINUX: lambda: \
+            build_targets(make, makefile_targets(build_command), architectures,
+                configurations, log_files)
     }
     os_target = os_targets[sys.platform]
     os_target()
@@ -303,8 +352,6 @@ def main():
                 OUTPUT: build_output_log,
                 ERROR: build_error_log
             }
-            if sys.platform != WINDOWS:
-                raise Exception('Not tested on platforms other than Windows')
             config_options = read_config_file(config_file_path())
             validate_config_options(config_options)
             commands = {
